@@ -14,7 +14,6 @@ class _HomePageState extends State<HomePage> {
   //List<Loc> _loclist = [];
   var locationdbservice = LocationDBService();
   var location = Loc();
-  bool isLoading = true;
 
   @override
   void initState() {
@@ -25,20 +24,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  showLoading() {
-    return SimpleDialog(
-      children: [
-        Center(
-          child: Column(
-            children: [
-              CircularProgressIndicator.adaptive(),
-            ],
-          ),
-        )
-      ],
-    );
   }
 
   getLocations() async {
@@ -56,49 +41,6 @@ class _HomePageState extends State<HomePage> {
         globals.loclist.add(locationModel);
       });
     });
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  Widget dnmButton() {
-    return Container(
-        width: 250,
-        height: 60,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.zero,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          ),
-          clipBehavior: Clip.antiAlias,
-          onPressed: () async {
-            location.name = "lorem ipsum";
-            location.note = "evet ipsum";
-            location.now = "now";
-            var result = await locationdbservice.saveLocation(location);
-            setState(() {
-              getLocations();
-            });
-
-            print(result);
-          },
-          child: Ink(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.orange[700], Colors.orange[300]])),
-            child: Container(
-              constraints: BoxConstraints(maxHeight: 300, minWidth: 50),
-              alignment: Alignment.center,
-              child: Text(
-                "DB DENEME",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ));
   }
 
   Widget saveButton() {
@@ -150,8 +92,6 @@ class _HomePageState extends State<HomePage> {
 
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => MyLocations()));
-
-            //popUpScreen();
           },
           child: Ink(
             decoration: BoxDecoration(
@@ -171,71 +111,11 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  void popUpScreen() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter mystate) {
-            return Container(
-                color: Colors.blue[600],
-                height: MediaQuery.of(context).size.height * .8,
-                child: ListView.builder(
-                    itemCount: globals.loclist.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                          padding: EdgeInsets.only(top: 8, left: 16, right: 16),
-                          child: Card(
-                            child: ListTile(
-                              leading: Text("_loclist[index].name"),
-                              title: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () async {
-                                  var result =
-                                      await locationdbservice.deleteLocation(
-                                          globals.loclist[index].id);
-                                  mystate(() {
-                                    globals.loclist.removeAt(index);
-                                  });
-                                  if (result > 0) {
-                                    Toast.show("Silindi", context,
-                                        duration: Toast.LENGTH_SHORT,
-                                        gravity: Toast.BOTTOM);
-                                    getLocations();
-                                  }
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ));
-                    }));
-          });
-        });
-  }
-
-  Widget _loading() {
-    // await Future.delayed(Duration(seconds: 1));
-    return Container(
-      alignment: Alignment.center,
-      height: MediaQuery.of(context).size.height * .3,
-      width: MediaQuery.of(context).size.width * .5,
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[100],
         body: Container(
-            /* decoration: BoxDecoration(
-                image: DecorationImage(
-              image:
-                  AssetImage("assets/sylwia-bartyzel-D2K1UZr4vxk-unsplash.jpg"),
-              fit: BoxFit.cover,
-            )),*/
             child: Stack(alignment: Alignment.center, children: [
           Opacity(
             opacity: 0.85,

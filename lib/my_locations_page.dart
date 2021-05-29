@@ -13,17 +13,8 @@ class MyLocations extends StatefulWidget {
 }
 
 class _MyLocationsState extends State<MyLocations> {
-  //List<Loc> _loclist = [];
   var locationdbservice = LocationDBService();
   bool isLoading = true;
-
-  /*@override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      getLocations();
-    });
-  }*/
 
   getLocations() async {
     globals.loclist = [];
@@ -121,17 +112,6 @@ class _MyLocationsState extends State<MyLocations> {
                     ),
                     onPressed: () async {
                       deleteLocation(index);
-                      /* var result = await locationdbservice
-                                .deleteLocation(globals.loclist[index].id);
-                            globals.loclist.removeAt(index);
-
-                            if (result > 0) {
-                              Toast.show("Silindi", context,
-                                  duration: Toast.LENGTH_SHORT,
-                                  gravity: Toast.BOTTOM);
-                              getLocations();
-                            }
-                            setState(() {});*/
                     },
                   ),
                 ),
